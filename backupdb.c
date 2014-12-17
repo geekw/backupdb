@@ -25,8 +25,8 @@ int sqlite3_copy(const char *srcDBFileName, const char *destDBFileName){
   sqlite3 *pTo;             /* Database to copy to (pFile or pInMemory) */
 
 
-  /* Open the database file identified by zFilename. Exit early if this fails
-  ** for any reason. */
+  /* Open the database files identified by srcDBFileName and destDBFileName. 
+  ** Exit early if this fails for any reason. */
   rc = sqlite3_open(srcDBFileName, &pFrom);
   if (rc != SQLITE_OK)
    {
@@ -42,15 +42,13 @@ int sqlite3_copy(const char *srcDBFileName, const char *destDBFileName){
   }
   if( rc==SQLITE_OK ){
 
-
-
     /* Set up the backup procedure to copy from the "main" database of 
-    ** connection pFile to the main database of connection pInMemory.
+    ** connection pFrom to the main database of connection pTo.
     ** If something goes wrong, pBackup will be set to NULL and an error
     ** code and  message left in connection pTo.
     **
     ** If the backup object is successfully created, call backup_step()
-    ** to copy data from pFile to pInMemory. Then call backup_finish()
+    ** to copy data from pFrom to pTo. Then call backup_finish()
     ** to release resources associated with the pBackup object.  If an
     ** error occurred, then  an error code and message will be left in
     ** connection pTo. If no error occurred, then the error code belonging
@@ -64,8 +62,8 @@ int sqlite3_copy(const char *srcDBFileName, const char *destDBFileName){
     rc = sqlite3_errcode(pTo);
   }
 
-  /* Close the database connection opened on database file zFilename
-  ** and return the result of this function. */
+  /* Close the database connections opened on database file srcDBFileName
+  ** and destDBFileName return the result of this function. */
   (void)sqlite3_close(pFrom);
   (void)sqlite3_close(pTo);
   return rc;
